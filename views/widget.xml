@@ -1,0 +1,7 @@
+<Alloy>
+	<Window id="win">
+		<View id="container"></View>
+		<ScrollView id="scrollView" onScrollend="scrollendMove" onScroll="scrollMove">
+		</ScrollView>
+	</Window>
+</Alloy>
