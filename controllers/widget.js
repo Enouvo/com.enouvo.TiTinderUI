@@ -3,8 +3,6 @@
 //             ENOUVO TINDER EFFECT             //
 //                                              //
 //**********************************************//
-$.win.open();
-
 const COLORS = [
    '#65b237', // green
    '#346ca5', // blue
@@ -56,60 +54,8 @@ var curY=null, curX=null;
 	checkMoveTop=false,
 	checkMoveLeftRight=false;
 
-_.extend($.scrollView, properties);
-$.scrollView.setContentHeight(tinderHeight+1);
-$.scrollView.setContentWidth(tinderWidth+1);
-
 var index=11;
-for (var i = 0; i <= index; i++) {
 
-    var wrap = Ti.UI.createImageView({
-    	left: tinderLeft,
-    	top : tinderTop,
-        width: tinderWidth,
-        height: tinderHeight,
-        //image:  IMAGES[i],
-        backgroundColor : COLORS[i]
-    });
-    var hateLabel = Ti.UI.createLabel({
-	  color: '#fa7065',
-	  font: { fontSize:30 },
-	  text: ' Nope  ',
-	  textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
-	  bottom: 10,
-	  right: 10,
-	  borderColor: "#fa7065",
-	  width: Ti.UI.SIZE, height: Ti.UI.SIZE,
-	  visible: false
-	});
-
-	var likeLabel = Ti.UI.createLabel({
-	  color: '#6bd04b',
-	  font: { fontSize:30 },
-	  text: ' Like  ',
-	  textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
-	  bottom: 10,
-	  left: 10,
-	  borderColor: "#6bd04b",
-	  width: Ti.UI.SIZE, height: Ti.UI.SIZE,
-	  visible: false
-	});
-
-	var superLikeLabel = Ti.UI.createLabel({
-	  color: '#66d9ef',
-	  font: { fontSize:30 },
-	  text: ' Super Like  ',
-	  textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
-	  width: Ti.UI.SIZE, height: Ti.UI.SIZE,
-	  visible: false
-	});
-
-
-    wrap.add(hateLabel);
-    wrap.add(likeLabel);
-    wrap.add(superLikeLabel);
-    $.container.add(wrap);
-}
 
 // animations
 var animateTop = Ti.UI.createAnimation({
@@ -130,6 +76,7 @@ var animateLeft = Ti.UI.createAnimation({
     opacity: 0,
     duration: 300
 });
+
 var animateRight = Ti.UI.createAnimation({
     left: 500,
     transform: Ti.UI.create2DMatrix({rotate: -60}),
@@ -137,15 +84,75 @@ var animateRight = Ti.UI.createAnimation({
     duration: 300
 });
 
-function scrollendMove(e){
-	if (!checkMoveTop && $.container.children[index]) {
-		$.container.children[index].animate(animateTopOrigin);
-	}
+function init(){
+	$.win.open();
 
-	if ($.container.children[index]) {
-		$.container.children[index].children[0].setVisible(false);
-		$.container.children[index].children[1].setVisible(false);
-		$.container.children[index].children[2].setVisible(false);
+	_.extend($.scrollView, properties);
+	$.scrollView.setContentHeight(tinderHeight+1);
+	$.scrollView.setContentWidth(tinderWidth+1);
+
+	for (var i = 0; i <= index; i++) {
+
+	    var wrap = Ti.UI.createImageView({
+	    	left: tinderLeft,
+	    	top : tinderTop,
+	        width: tinderWidth,
+	        height: tinderHeight,
+	        //image:  IMAGES[i],
+	        backgroundColor : COLORS[i]
+	    });
+	    var hateLabel = Ti.UI.createLabel({
+		  color: '#fa7065',
+		  font: { fontSize:30 },
+		  text: ' Nope  ',
+		  textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+		  bottom: 10,
+		  right: 10,
+		  borderColor: "#fa7065",
+		  width: Ti.UI.SIZE, height: Ti.UI.SIZE,
+		  visible: false
+		});
+
+		var likeLabel = Ti.UI.createLabel({
+		  color: '#6bd04b',
+		  font: { fontSize:30 },
+		  text: ' Like  ',
+		  textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+		  bottom: 10,
+		  left: 10,
+		  borderColor: "#6bd04b",
+		  width: Ti.UI.SIZE, height: Ti.UI.SIZE,
+		  visible: false
+		});
+
+		var superLikeLabel = Ti.UI.createLabel({
+		  color: '#66d9ef',
+		  font: { fontSize:30 },
+		  text: ' Super Like  ',
+		  textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+		  width: Ti.UI.SIZE, height: Ti.UI.SIZE,
+		  visible: false
+		});
+
+	    wrap.add(hateLabel);
+	    wrap.add(likeLabel);
+	    wrap.add(superLikeLabel);
+	    $.container.add(wrap);
+	}
+}
+
+init();
+
+function scrollendMove(e){
+	var item = $.container.children[index];
+	
+	if (item) {
+		if (!checkMoveTop && $.container.children[index]) {
+			item.animate(animateTopOrigin);
+		}
+		item.children[0].setVisible(false);
+		item.children[1].setVisible(false);
+		item.children[2].setVisible(false);
 	}
 	checkMoveTop= false;
     curY = null;
@@ -163,44 +170,46 @@ function scrollMove(e) {
         transform: matrix,
         duration: 20
     });
+    var item = $.container.children[index];
 	if (!checkMoveTop && $.container.children[index]) {
-		$.container.children[index].animate(animate);
-		$.container.children[index].top = tinderTop - coordinatesY;
-		$.container.children[index].left = tinderLeft - coordinatesX;
+		item.animate(animate);
+		item.top = tinderTop - coordinatesY;
+		item.left = tinderLeft - coordinatesX;
 		if (coordinatesY - Math.abs(coordinatesX) > distanceToShowLabel) {
-			if (!$.container.children[index].children[2].visible) {
-				$.container.children[index].children[2].setVisible(true);
-				$.container.children[index].children[1].setVisible(false);
-				$.container.children[index].children[0].setVisible(false);
+			if (!item.children[2].visible) {
+				item.children[2].setVisible(true);
+				item.children[1].setVisible(false);
+				item.children[0].setVisible(false);
 			}	
 		} else if (coordinatesX > distanceToShowLabel) {
-			if (!$.container.children[index].children[0].visible) {
-				$.container.children[index].children[0].setVisible(true);
-				$.container.children[index].children[1].setVisible(false);
-				$.container.children[index].children[2].setVisible(false);
+			if (!item.children[0].visible) {
+				item.children[0].setVisible(true);
+				item.children[1].setVisible(false);
+				item.children[2].setVisible(false);
 			}		
 		} else if (coordinatesX < -distanceToShowLabel) {
-			if (!$.container.children[index].children[1].visible) {
-				$.container.children[index].children[1].setVisible(true);
-				$.container.children[index].children[0].setVisible(false);
-				$.container.children[index].children[2].setVisible(false);
+			if (!item.children[1].visible) {
+				item.children[1].setVisible(true);
+				item.children[0].setVisible(false);
+				item.children[2].setVisible(false);
 			}		
 		}
 	}; 
+	
 	if (coordinatesY >=distanceToPullTop && !checkMoveTop) {
 		checkMoveTop= true;
-		$.container.children[index].animate(animateTop, function(){
+		item.animate(animateTop, function(){
 	    	index--;	    	
 	    });	    
 	}
 	else if (coordinatesX > distanceToPullLeftRight && !checkMoveTop) {
 		checkMoveTop = true;
-		$.container.children[index].animate(animateLeft, function(){
+		item.animate(animateLeft, function(){
         	index--;
         }); 
 	} else if (coordinatesX < - distanceToPullLeftRight && !checkMoveTop) {
 		checkMoveTop = true;
-		$.container.children[index].animate(animateRight, function(){
+		item.animate(animateRight, function(){
         	index--;
         }); 
 	}
